@@ -35,4 +35,9 @@ class CommentsController < ApplicationController
     end
   end
 
+  def delete
+    Comment.delete_comment(params)
+    render :nothing => true, :status => 200
+  end
+
 end

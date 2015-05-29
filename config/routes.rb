@@ -10,9 +10,11 @@ Goffip::Application.routes.draw do
 
   post '/post' => 'posts#create'
   put '/post' => 'posts#update'
+  delete 'post' => 'posts#delete'
 
   post '/comment' => 'comments#create'
   put '/comment' => 'comments#update'
+  delete '/comment' => 'comments#delete'
 
   get '/posts/testing' => 'posts#testing'
 

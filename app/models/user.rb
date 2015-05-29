@@ -6,7 +6,8 @@ class User < ActiveRecord::Base
 
   before_save :validate_email
 
-  validate_uniqueness_of :username
+  validates_presence_of :email, :first_name, :last_name, :user_name#, :session_token
+  validates_uniqueness_of :user_name
 
   def self.get_name_by_id(user_id)
     user = User.find(user_id) rescue nil
@@ -27,7 +28,7 @@ class User < ActiveRecord::Base
     {
       'first_name'      => self.first_name,
       'last_name'       => self.last_name,
-      'user_name'       => self.username,
+      'user_name'       => self.user_name,
       'anonymity_count' => self.anonymity_count,
       'email'           => self.email,
       'fb_link'         => self.fb_link,
