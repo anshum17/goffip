@@ -4,7 +4,7 @@ class AclController < ActionController::Base
 
   def find_current_user
     session_token = params[:session_token] || session[:session_token]
-    @user = User.find_by_session_token(session_token) if !session_token.nil?
+    @user = User.find_by_session_token(session_token)
   end
 
   def authorize

@@ -6,7 +6,7 @@ class User < ActiveRecord::Base
 
   validates_uniqueness_of :user_name, :email
 
-  validates_presence_of :email, :first_name, :last_name, :user_name#, :session_token
+  validates_presence_of :email, :first_name, :last_name#, :session_token
 
   before_save :get_session_token
   before_save :validate_email
@@ -22,7 +22,7 @@ class User < ActiveRecord::Base
 
   def self.create_user(params)
     # Rails.logger.info(params)
-    user = User.where(:email => params[:email], :user_name => params[:user_name], :first_name => params[:first_name], :last_name => params[:last_name], :department => params[:department], :fb_link => params[:fb_link]).first_or_create
+    user = User.where(:email => params[:email], :first_name => params[:first_name], :last_name => params[:last_name], :department => params[:department], :fb_link => params[:fb_link]).first_or_create
     user.session_token  = user.get_session_token()
     if user.save
       return {:message => 'User Successfully created', :status => true, :user => user}
@@ -44,7 +44,7 @@ class User < ActiveRecord::Base
   end
 
   def update_profile(params)
-    self.update_attributes(:department => DepartmentList.get_index(params[:department]))
+    self.update_attributes(:user_name => params[:user_name], :department => DepartmentList.get_index(params[:department]))
   end
 
   def validate_email
