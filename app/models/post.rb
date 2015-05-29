@@ -28,13 +28,13 @@ class Post < ActiveRecord::Base
     }
   end
 
-
   def self.create_post(params)
     if anonymity_check(@user, params[:is_anonymous])
       Post.new(:body => [params[:body]], :type => PostTypeList.get_index(params[:type]))
       return success_message('Post successfully created.')
     else
       return failure_messgage('Weekly anonymity Count exceeded')
+    end
   end
 
   def self.update_post(params)

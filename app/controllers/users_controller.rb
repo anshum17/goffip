@@ -9,7 +9,8 @@ class UsersController < ApplicationController
 
   ## create user
   def create
-    User.create_user(params)
+    result = User.create_user(params)
+    render :json => {:payload => result, :message => result[:message]}, :status => result[:status] ? 200 : 400
   end
 
   ##update user info

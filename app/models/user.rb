@@ -4,6 +4,10 @@ class User < ActiveRecord::Base
   has_many :posts, :class_name => 'Post'
   has_many :comments, :class_name => 'Comment'
 
+  before_save :validate_email
+
+  validate_uniqueness_of :username
+
   def self.get_name_by_id(user_id)
     user = User.find(user_id) rescue nil
   end
@@ -23,6 +27,7 @@ class User < ActiveRecord::Base
     {
       'first_name'      => self.first_name,
       'last_name'       => self.last_name,
+      'user_name'       => self.username,
       'anonymity_count' => self.anonymity_count,
       'email'           => self.email,
       'fb_link'         => self.fb_link,
@@ -32,6 +37,10 @@ class User < ActiveRecord::Base
 
   def update_profile(params)
     self.update_attributes(:department => DepartmentList.get_index(params[:department]))
+  end
+
+  def validate_email
+
   end
 
   def get_session_token
