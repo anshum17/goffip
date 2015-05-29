@@ -5,10 +5,10 @@ class Changedefaultvaluepost < ActiveRecord::Migration
     remove_column :posts, :dislike
     remove_column :comments, :dislike
 
-    add_column :posts, :like, :integer, array: true, :default => []
-    add_column :comments, :like, :integer, array: true,  :default => []
-    add_column :posts, :dislike, :integer, array: true,  :default => []
-    add_column :comments, :dislike, :integer, array: true,  :default => []
+    add_column :posts, :like, :integer
+    add_column :comments, :like, :integer
+    add_column :posts, :dislike, :integer
+    add_column :comments, :dislike, :integer
   end
 
   def down
