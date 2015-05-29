@@ -6,6 +6,9 @@ class User < ActiveRecord::Base
 
   validates_uniqueness_of :user_name
 
+  validates_presence_of :email, :first_name, :last_name, :user_name#, :session_token
+  validates_uniqueness_of :user_name
+
   before_save :get_session_token
   before_save :validate_email
 
@@ -33,7 +36,7 @@ class User < ActiveRecord::Base
     {
       'first_name'      => self.first_name,
       'last_name'       => self.last_name,
-      'user_name'       => self.username,
+      'user_name'       => self.user_name,
       'anonymity_count' => self.anonymity_count,
       'email'           => self.email,
       'fb_link'         => self.fb_link,

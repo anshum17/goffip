@@ -8,6 +8,7 @@ class Comment < ActiveRecord::Base
 
   serialize :body, Array
   serialize :like, Array
+  serialize :dislike, Array
   validates_presence_of :body, :user, :post
 
   def self.create_comment(params, user)
@@ -42,7 +43,12 @@ class Comment < ActiveRecord::Base
 
   def get_comment_hash
     comment_hash = self.to_hash
-    comment_hash.merge!({'has_liked' => self.like.present? && self.like.include?(@user)})
+    comment_hash.merge!(
+      {
+        'has_liked' => self.like.present? && self.like.include?(@user),
+        'can_comment_anonymously' => self.post.user_id == @user.id && self.post.is_anonymous
+      }
+    )
     comment_hash
   end
 
@@ -71,6 +77,12 @@ class Comment < ActiveRecord::Base
       like_status ? comment.like.push(@user_id) : comment.dislike.push(@user_id)
     end
     comment.save
+  end
+
+  def self.delete_post(params)
+    comment = Comment.find(params[:id]) rescue nil
+    return failure_messgage('Comment ID not found') if comment.nil?
+    comment.delete
   end
 
   private

@@ -31,6 +31,11 @@ class PostsController < ApplicationController
     end
   end
 
+  def delete
+    Post.delete_post(params)
+    render :nothing => true, :status => 200
+  end
+
   def get_post
     response = Post.get_post(params)
     if response['status'] == false

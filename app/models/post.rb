@@ -5,6 +5,7 @@ class Post < ActiveRecord::Base
   has_many :comments, :dependent => :destroy, :class_name => 'Comment'
   serialize :body, Array
   serialize :like, Array
+  serialize :dislike, Array
 
   validates_presence_of :body, :type, :user
 
@@ -13,8 +14,14 @@ class Post < ActiveRecord::Base
     type = PostTypeList.get_index params[:type]
     posts = Post.where('type = ? AND created_at > ?', type, Date.today - 7).includes(:comments)
     posts.collect do |post|
-      post.to_hash
+      post.get_post_hash
     end
+  end
+
+  def get_post_hash
+    post_hash = self.to_hash
+    post_hash.merge!({'has_liked' => self.like.present? && self.like.include?(@user)})
+    post_hash
   end
 
   def to_hash
@@ -32,7 +39,7 @@ class Post < ActiveRecord::Base
   def self.get_post(post_id)
     post = Post.find(post_id) rescue nil
     return failure_response('Post not found') if post.blank?
-    post.to_hash
+    post.get_post_hash
   end
 
   def self.process_like(params)
@@ -64,7 +71,7 @@ class Post < ActiveRecord::Base
         return failure_messgage(p.errors.messages)
       end
     else
-      return failure_messgage('Weekly anonymity Count exceeded')
+      return failure_messgage('Weekly anonymity count exceeded')
     end
   end
 
@@ -77,6 +84,11 @@ class Post < ActiveRecord::Base
     return success_message('Post Successfully updated.')
   end
 
+  def self.delete_post(params)
+    post = Post.find(params[:id]) rescue nil
+    return failure_messgage('Post ID not found') if post.nil?
+    post.delete
+  end
 
   private
 
