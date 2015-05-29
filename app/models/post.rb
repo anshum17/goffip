@@ -43,10 +43,10 @@ class Post < ActiveRecord::Base
     users_liked_post = post.like
     users_disliked_post = post.dislike
     if users_liked_post.include? @user
-      return failure_response('Can not like a post twice.') if like_status = true
+      return failure_response('Can not like a post twice.') if like_status == true
       post.like.push(@user_id)
     elsif users_disliked_post.include? @user
-      return failure_response('Can not dislike a post twice.') if like_status = false
+      return failure_response('Can not dislike a post twice.') if like_status == false
       post.dislike.push(@user_id)
     else
       like_status ? post.like.push(@user_id) : post.dislike.push(@user_id)

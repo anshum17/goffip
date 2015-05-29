@@ -43,10 +43,10 @@ class Comment < ActiveRecord::Base
     users_liked_comment = comment.like
     users_disliked_comment = comment.dislike
     if users_liked_comment.include? @user
-      return failure_response('Can not like a comment twice.') if like_status = true
+      return failure_response('Can not like a comment twice.') if like_status == true
       comment.like.push(@user_id)
     elsif users_disliked_comment.include? @user
-      return failure_response('Can not dislike a comment twice.') if like_status = false
+      return failure_response('Can not dislike a comment twice.') if like_status == false
       comment.dislike.push(@user_id)
     else
       like_status ? comment.like.push(@user_id) : comment.dislike.push(@user_id)

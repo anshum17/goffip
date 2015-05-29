@@ -2,7 +2,11 @@ Goffip::Application.routes.draw do
 
   get '/posts/get_all_posts' => 'posts#index'
 
-  get 'posts/get_post' => 'posts#get_post'
+  get '/posts/get_post' => 'posts#get_post'
+
+  get '/posts/like' => 'posts#like_post'
+
+  get '/comments/like' => 'comments#like_post'
 
   # The priority is based upon order of creation:
   # first created -> highest priority.
