@@ -1,7 +1,7 @@
 class PostsController < ApplicationController
 
   def index
-    response = Post.get_all_posts(params)
+    response = Post.get_all_posts(@user, params)
     render :json => {:payload => response}, status: 200
   end
 

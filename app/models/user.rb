@@ -27,7 +27,7 @@ class User < ActiveRecord::Base
     if user.save
       return {:message => 'User Successfully created', :status => true, :user => user}
     else
-      return {:message => user.errors.messages, :status => false, :user => nil}
+      return {:message => user.errors.messages, :status => false, :user => ''}
     end
   end
 

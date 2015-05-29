@@ -9,8 +9,8 @@ class Post < ActiveRecord::Base
 
   validates_presence_of :body, :type, :user
 
-  def self.get_all_posts(params)
-    @user = User.get_name_by_id params[:user_id]
+  def self.get_all_posts(params,user)
+    @user = user
     type = PostTypeList.get_index params[:type]
     posts = Post.where('type = ? AND created_at > ?', type, Date.today - 7).includes(:comments)
     posts.collect do |post|
