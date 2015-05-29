@@ -6,7 +6,19 @@ Goffip::Application.routes.draw do
 
   get '/posts/like' => 'posts#like_post'
 
-  get '/comments/like' => 'comments#like_post'
+  get '/comments/like' => 'comments#like_comment'
+
+  post '/post' => 'posts#create'
+  put '/post' => 'posts#update'
+
+  post '/comment' => 'comments#create'
+  put '/comment' => 'comments#update'
+
+  get '/posts/testing' => 'posts#testing'
+
+  get '/user' => 'users#index'
+  post '/user' => 'users#create'
+  put '/user' => 'users#update'
 
   # The priority is based upon order of creation:
   # first created -> highest priority.

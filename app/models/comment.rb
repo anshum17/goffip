@@ -10,6 +10,19 @@ class Comment < ActiveRecord::Base
   serialize :like, Array
   validates_presence_of :body, :user, :post
 
+  def self.create_comment(params)
+    create(:body => [params[:body]], :post_id => params[:post_id], :user_id => @user.id)
+  end
+
+  def self.update_comment(params)
+    comment = Comment.find(params[:id]) rescue nil
+    return failure_messgage('Comment ID not found') if comment.nil?
+
+    comment.body.push(params[:body])
+    comment.save
+    return success_message('Comment Successfully updated.')
+  end
+
   def to_hash
     {
       'id' => self.id,
@@ -54,11 +67,14 @@ class Comment < ActiveRecord::Base
     comment.save
   end
 
-  def self.failure_response(message)
-    {
-      'message' => message,
-      'status' => false
-    }
+  private
+
+  def self.failure_message(message)
+    {:message => message, :status => false}
+  end
+
+  def self.success_message(message)
+    {:message => message, :status => true}
   end
 
 end
