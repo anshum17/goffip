@@ -1,4 +1,4 @@
-class PostController < ApplicationController
+class PostsController < ApplicationController
 
   def index
     response = Post.get_all_posts params[:user_id]
@@ -29,6 +29,10 @@ class PostController < ApplicationController
     else
       render :json => {:message => profanity_check[:message]}, status => 400
     end
+  end
+
+  def testing
+    render :json => {:message => 'yay'}
   end
 
 end
