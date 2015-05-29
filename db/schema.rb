@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20150529191522) do
+ActiveRecord::Schema.define(:version => 20150529223238) do
 
   create_table "comments", :force => true do |t|
     t.text     "body"
@@ -42,7 +42,7 @@ ActiveRecord::Schema.define(:version => 20150529191522) do
   create_table "posts", :force => true do |t|
     t.text     "body"
     t.integer  "user_id"
-    t.integer  "type"
+    t.integer  "post_type"
     t.datetime "created_at",                      :null => false
     t.datetime "updated_at",                      :null => false
     t.boolean  "is_anonymous", :default => false

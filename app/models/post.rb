@@ -1,45 +1,45 @@
 class Post < ActiveRecord::Base
   belongs_to :user
-  attr_accessible :body, :like, :dislike, :type
+  attr_accessible :body, :like, :dislike, :post_type, :is_anonymous
 
   has_many :comments, :dependent => :destroy, :class_name => 'Comment'
   serialize :body, Array
   # serialize :like, Array
   # serialize :dislike, Array
 
-  validates_presence_of :body, :type, :user
+  validates_presence_of :body, :post_type, :user
 
   def self.get_all_posts(params,user)
-    @user = user
-    type = PostTypeList.get_index params[:type]
-    posts = Post.where('type = ? AND created_at > ?', type, Date.today - 7).includes(:comments)
+    post_type = PostTypeList.get_index params[:post_type]
+    posts = Post.where('post_type = ? AND created_at > ?', post_type, Date.today - 7).includes(:comments)
     posts.collect do |post|
-      post.get_post_hash
+      post.get_post_hash(user)
     end
   end
 
-  def get_post_hash
-    post_hash = self.to_hash
-    post_hash.merge!({'has_liked' => self.like.present? && self.like.include?(@user)})
+  def get_post_hash(user)
+    post_hash = self.to_hash(user)
+    post_hash.merge!({'has_liked' => self.like.present? && self.like.include?(user)})
     post_hash
   end
 
-  def to_hash
+  def to_hash(user)
     {
       'id' => self.id,
       'body' => self.body.last,
-      'user_name' => @user.user_name,
-      'type' => self.type,
+      'user_name' => self.is_anonymous ? 'Anonymous' : user.user_name,
+      'post_type' => self.post_type,
       'like' => self.like.present? ? self.like.count : 0,
-      'comments' => Comment.get_comments(self,@user),
+      'comments' => Comment.get_comments(self,user),
       'created_at' => self.created_at.to_i
     }
   end
 
-  def self.get_post(post_id)
+  def self.get_post(post_id, user)
+    @user = user
     post = Post.find(post_id) rescue nil
     return failure_message('Post not found') if post.blank?
-    post.get_post_hash
+    post.get_post_hash(user)
   end
 
   def self.process_like(params)
@@ -63,7 +63,7 @@ class Post < ActiveRecord::Base
 
   def self.create_post(params, user)
     if anonymity_check(user, params[:is_anonymous])
-      p = Post.new(:like => '', :dislike => '', :body => [params[:body]], :type => PostTypeList.get_index(params[:type]))
+      p = Post.new(:like => '', :dislike => '', :body => [params[:body]], :post_type => PostTypeList.get_index(params[:post_type]))
       p.user = user
       if p.save
         return success_message('Post successfully created.')
@@ -86,7 +86,6 @@ class Post < ActiveRecord::Base
 
   def self.delete_post(params)
     post = Post.find(params[:id]) rescue nil
-    return failure_message('Post ID not found') if post.nil?
     post.delete
   end
 

@@ -5,24 +5,19 @@ Goffip::Application.routes.draw do
   get '/posts/get_post' => 'posts#get_post'
 
   get '/posts/like' => 'posts#like_post'
+  post '/posts' => 'posts#create'
+  post '/posts/update' => 'posts#update'
+  post '/posts/delete' => 'posts#delete'
 
   get '/comments/like' => 'comments#like_comment'
+  post '/comments' => 'comments#create'
+  post '/comments/update' => 'comments#update'
+  post '/comments/delete' => 'comments#delete'
 
-  post '/post' => 'posts#create'
-  put '/post' => 'posts#update'
-  delete 'post' => 'posts#delete'
+  get '/users' => 'users#index'
+  post '/users' => 'users#create'
+  post '/users/update' => 'users#update'
 
-  post '/comment' => 'comments#create'
-  put '/comment' => 'comments#update'
-  delete '/comment' => 'comments#delete'
-
-  get '/posts/testing' => 'posts#testing'
-
-  get '/user' => 'users#index'
-  post '/user' => 'users#create'
-  post '/user/update' => 'users#update'
-
-  delete '/user' => 'users#delete'
 
   # The priority is based upon order of creation:
   # first created -> highest priority.
