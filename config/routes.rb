@@ -1,4 +1,7 @@
 Goffip::Application.routes.draw do
+
+  get "user/index"
+
   # The priority is based upon order of creation:
   # first created -> highest priority.
 

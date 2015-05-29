@@ -1,0 +1,13 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  body: 
+  user: 
+  like: 
+  type: 1
+
+two:
+  body: 
+  user: 
+  like: 
+  type: 1

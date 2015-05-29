@@ -1,0 +1,15 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  body: MyText
+  user: 
+  like: 1
+  post: 
+  parent_id: 1
+
+two:
+  body: MyText
+  user: 
+  like: 1
+  post: 
+  parent_id: 1
