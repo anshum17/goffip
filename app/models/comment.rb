@@ -4,7 +4,7 @@ class Comment < ActiveRecord::Base
   attr_accessible :body, :like, :parent_id
 
   def self.create_comment(params)
-    create(:body => params[:body], :post_id => params[:post_id], :user_id => @user.id))
+    create(:body => params[:body], :post_id => params[:post_id], :user_id => @user.id)
   end
 
   def self.update_comment(params)

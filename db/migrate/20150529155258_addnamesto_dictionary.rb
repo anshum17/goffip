@@ -1,0 +1,12 @@
+class AddnamestoDictionary < ActiveRecord::Migration
+  def up
+    names = ["ahole","anus","ash0le","ash0les","asholes","ass","Assface","assh0le","assh0lez","asshole","assholes","assholz","asswipe","azzhole","bassterds","bastard","bastards","bastardz","basterds","basterdz","bitch","bitches","Blow Job","boffing","butthole","buttwipe","c0ck","c0cks","c0k","cawk","cawks","Clit","cnts","cntz","cock","cockhead","cock-head","cocks","CockSucker","cock-sucker","cunt","cunts","cuntz","dick","dild0","dild0s","dildo","dildos","dilld0","dilld0s","dominatricks","dominatrics","dominatrix","dyke","enema","f u c k","f u c k e r","fag1t","faget","fagg1t","faggit","faggot","fagit","fagz","faig","faigs","fuck","fucker","fuckin","fucking","fucks","fuk","fuker","Fukin","Fukk","Fukker","Fukkin","gayboy","gaygirl","gays","gayz","h00r","h0ar","h0re","hoar","hoor","jackoff","jerk-off","jiss","jizm","kunt","kunts","kuntz","Lesbian","Lezzian","massterbait","masstrbait","masstrbate","masterbaiter","masterbate","masterbates","Motha Fucker","Motha Fuker","Motha Fukkah","Motha Fukker","Mother Fucker","Mother Fukah","Mother Fuker","Mother Fukkah","Mother Fukker","mother-fucker","Mutha Fucker","Mutha Fukah","Mutha Fuker","Mutha Fukkah","Mutha Fukker","orgasim;","orgasm","orgasum","peeenus","peeenusss","peenus","peinus","pen1s","penas","penis","penis-breath","penus","penuus","Phuc","Phuck","Phuk","Phuker","Phukker","polac","pusse","pussee","pussy","semen","skanck","skank","slut","sluts","Slutty","slutz","tit","turd","va1jina","vag1na","vagiina","vagina","vaj1na","vajina","vullva","vulva","wh00r","wh0re","whore","blowjob","b!tch","b17ch","b1tch","bi+ch","boiolas","buceta","chink","cipa","clits","cum","dirsa","ejakulate","fatass","masturbate","masterbat*","masterbat3","motherfucker","scrotum","sh!t","shemale","shi+","sh!+","teets","tits","boobs","b00bs","teez","testical","testicle","titt","w00se","wank","whoar","*damn","*dyke","*fuck*","*shit*","@$$","amcik","andskota","arse*","assrammer","ayir","bi7ch","bitch*","bollock*","butt-pirate","Cock*","cunt*","dick*","dike*","ejackulate","Fu(*","fuk*","lesbo","masturbat*","pizda","poontsee","schlampe","schmuck","sharmuta","sharmute","shipal","shiz","skribz","skurwysyn","sphencter","spic","spierdalaj","splooge","suka","b00b*","testicle*"]
+
+    names.each do |name|
+      Dictionary.where(:name => name).first_or_create
+    end
+  end
+
+  def down
+  end
+end

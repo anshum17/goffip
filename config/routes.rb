@@ -2,11 +2,11 @@ Goffip::Application.routes.draw do
 
   get '/get_posts' => 'posts#get_posts'
 
-  post '/post' => 'posts#create'
-  put '/post' => 'posts#update'
+  post '/post' => 'post#create'
+  put '/post' => 'post#update'
 
-  post '/comment' => 'comments#create'
-  put '/comment' => 'comments#update'
+  post '/comment' => 'comment#create'
+  put '/comment' => 'comment#update'
 
   # The priority is based upon order of creation:
   # first created -> highest priority.
