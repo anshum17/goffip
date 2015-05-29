@@ -10,7 +10,7 @@ class Post < ActiveRecord::Base
   validates_presence_of :body, :post_type, :user
 
   def self.get_all_posts(params,user)
-    post_type = PostTypeList.get_index params[:post_type]
+    post_type = PostTypeList.get_index(params[:post_type].upcase)
     posts = Post.where('post_type = ? AND created_at > ?', post_type, Date.today - 7).includes(:comments)
     posts.collect do |post|
       post.get_post_hash(user)
@@ -63,7 +63,7 @@ class Post < ActiveRecord::Base
 
   def self.create_post(params, user)
     if anonymity_check(user, params[:is_anonymous])
-      p = Post.new(:like => '', :dislike => '', :body => [params[:body]], :post_type => PostTypeList.get_index(params[:post_type]))
+      p = Post.new(:like => '', :dislike => '', :body => [params[:body]], :post_type => PostTypeList.get_index(params[:post_type].upcase))
       p.user = user
       if p.save
         return success_message('Post successfully created.')
