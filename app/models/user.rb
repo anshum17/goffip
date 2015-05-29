@@ -1,5 +1,5 @@
 class User < ActiveRecord::Base
-  attr_accessible :anonymity_count, :department, :email, :fb_link, :first_name, :last_name, :session_token
+  attr_accessible :anonymity_count, :department, :email, :fb_link, :first_name, :last_name, :session_token, :user_name
 
   has_many :posts, :class_name => 'Post'
   has_many :comments, :class_name => 'Comment'
@@ -8,7 +8,7 @@ class User < ActiveRecord::Base
     user = User.find(user_id) rescue nil
   end
 
-  def self.get_user_name(user=nil)
+  def self.get_full_name(user=nil)
     return '' if user.blank?
     return "#{user.first_name} #{user.last_name}"
   end
@@ -19,7 +19,7 @@ class User < ActiveRecord::Base
     user.save
   end
 
-  def get_profile()
+  def get_profile
     {
       'first_name'      => self.first_name,
       'last_name'       => self.last_name,

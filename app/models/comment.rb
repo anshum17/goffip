@@ -1,7 +1,7 @@
 class Comment < ActiveRecord::Base
   belongs_to :user
   belongs_to :post
-  attr_accessible :body, :like, :parent_id
+  attr_accessible :body, :like, :dislike, :parent_id
 
   has_many :sub_comments, :class_name => 'Comment', :foreign_key => :parent_id
   belongs_to :parent_comment, :class_name => 'Comment', :foreign_key => :parent_id
@@ -29,7 +29,7 @@ class Comment < ActiveRecord::Base
       'body' => self.body.last,
       'like' => self.like.present? ? self.like.count : 0,
       'parent_id' => self.parent_id,
-      'user_name' => User.get_user_name(@user),
+      'user_name' => @user.user_name,
       'created_at' => self.created_at
     }
   end
