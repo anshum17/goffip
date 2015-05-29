@@ -11,14 +11,15 @@ class Comment < ActiveRecord::Base
   validates_presence_of :body, :user, :post
 
   def self.create_comment(params)
-    create(:body => params[:body], :post_id => params[:post_id], :user_id => @user.id)
+    create(:body => [params[:body]], :post_id => params[:post_id], :user_id => @user.id)
   end
 
   def self.update_comment(params)
     comment = Comment.find(params[:id]) rescue nil
     return failure_messgage('Comment ID not found') if comment.nil?
 
-    comment.update_attributes(:body => params[:body])
+    comment.body.push(params[:body])
+    comment.save
     return success_message('Comment Successfully updated.')
   end
 
