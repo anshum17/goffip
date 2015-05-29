@@ -1,7 +1,6 @@
 Goffip::Application.routes.draw do
-  get "user/index"
 
-  get '/get_posts' => 'post#get_posts'
+  get '/posts/get_posts' => 'posts#index'
 
   # The priority is based upon order of creation:
   # first created -> highest priority.
