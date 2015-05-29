@@ -15,8 +15,8 @@ class CommentsController < ApplicationController
   def create
     profanity_check = Dictionary.check_profanity_words(params[:body])
     if profanity_check[:status]
-      Post.create_post(params)
-      render :json => {:message => 'Post Successfully Created'}, :status => 200
+      response = Post.create_post(params, @user)
+      render :json => {:message => response[:message]}, :status => response[:status] ? 200 : 400
     else
       render :json => {:message => profanity_check[:message]}, status => 400
     end

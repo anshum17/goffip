@@ -5,31 +5,13 @@ class PostsController < ApplicationController
     render :json => response, status: 200
   end
 
-  def get_post
-    response = Post.get_all_posts(params)
-    if response['status'] == false
-      render :json => response, status: 400
-    else
-      render :json => response, status: 200
-    end
-  end
-
-  def like_post
-    response = Post.process_like(params)
-    if response['status'] == false
-      render :json => response, status: 400
-    else
-      render :json => response, status: 200
-    end
-  end
-
   #####
   # :params => {:body, :type}
   #####
   def create
     profanity_check = Dictionary.check_profanity_words(params[:body])
     if profanity_check[:status]
-      response = Post.create_post(params)
+      response = Post.create_post(params, @user)
       render :json => {:message => response[:message]}, :status => response[:status] ? 200 : 400
     else
       render :json => {:message => profanity_check[:message]}, status => 400
@@ -46,6 +28,24 @@ class PostsController < ApplicationController
       render :json => {:message => result[:message]}, :status => result[:status] ? 200 : 400
     else
       render :json => {:message => profanity_check[:message]}, status => 400
+    end
+  end
+
+  def get_post
+    response = Post.get_all_posts(params)
+    if response['status'] == false
+      render :json => response, status: 400
+    else
+      render :json => response, status: 200
+    end
+  end
+
+  def like_post
+    response = Post.process_like(params)
+    if response['status'] == false
+      render :json => response, status: 400
+    else
+      render :json => response, status: 200
     end
   end
 

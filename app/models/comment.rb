@@ -10,8 +10,14 @@ class Comment < ActiveRecord::Base
   serialize :like, Array
   validates_presence_of :body, :user, :post
 
-  def self.create_comment(params)
-    create(:body => [params[:body]], :post_id => params[:post_id], :user_id => @user.id)
+  def self.create_comment(params, user)
+    c = Comment.new(:body => [params[:body]], :post_id => params[:post_id])
+    c.user = user
+    if c.save
+      return success_message('Comment successfully created.')
+    else
+      return failure_messgage(c.errors.messages)
+    end
   end
 
   def self.update_comment(params)

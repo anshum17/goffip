@@ -4,9 +4,10 @@ class User < ActiveRecord::Base
   has_many :posts, :class_name => 'Post'
   has_many :comments, :class_name => 'Comment'
 
-  before_save :validate_email
+  validates_uniqueness_of :user_name
 
-  validate_uniqueness_of :username
+  before_save :get_session_token
+  before_save :validate_email
 
   def self.get_name_by_id(user_id)
     user = User.find(user_id) rescue nil
@@ -20,7 +21,11 @@ class User < ActiveRecord::Base
   def create_user(params)
     user = User.new(params)
     user.session_token  = user.get_session_token()
-    user.save
+    if user.save
+      return {:message => 'User Successfully created', :status => true, :user => user}
+    else
+      return {:message => user.errors.messages, :status => false, :user => nil}
+    end
   end
 
   def get_profile
@@ -49,6 +54,16 @@ class User < ActiveRecord::Base
      self.save
     end
     return self.session_token
+  end
+
+  private
+
+  def self.failure_message(message)
+
+  end
+
+  def self.success_message(message)
+
   end
 
 end
