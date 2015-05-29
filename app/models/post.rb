@@ -4,8 +4,8 @@ class Post < ActiveRecord::Base
 
   has_many :comments, :dependent => :destroy, :class_name => 'Comment'
   serialize :body, Array
-  serialize :like, Array
-  serialize :dislike, Array
+  # serialize :like, Array
+  # serialize :dislike, Array
 
   validates_presence_of :body, :type, :user
 
@@ -38,7 +38,7 @@ class Post < ActiveRecord::Base
 
   def self.get_post(post_id)
     post = Post.find(post_id) rescue nil
-    return failure_response('Post not found') if post.blank?
+    return failure_message('Post not found') if post.blank?
     post.get_post_hash
   end
 
@@ -50,10 +50,10 @@ class Post < ActiveRecord::Base
     users_liked_post = post.like
     users_disliked_post = post.dislike
     if users_liked_post.include? @user
-      return failure_response('Can not like a post twice.') if like_status == true
+      return failure_message('Can not like a post twice.') if like_status == true
       post.like.push(@user_id)
     elsif users_disliked_post.include? @user
-      return failure_response('Can not dislike a post twice.') if like_status == false
+      return failure_message('Can not dislike a post twice.') if like_status == false
       post.dislike.push(@user_id)
     else
       like_status ? post.like.push(@user_id) : post.dislike.push(@user_id)
@@ -63,21 +63,21 @@ class Post < ActiveRecord::Base
 
   def self.create_post(params, user)
     if anonymity_check(user, params[:is_anonymous])
-      p = Post.new(:body => [params[:body]], :type => PostTypeList.get_index(params[:type]))
+      p = Post.new(:like => '', :dislike => '', :body => [params[:body]], :type => PostTypeList.get_index(params[:type]))
       p.user = user
       if p.save
         return success_message('Post successfully created.')
       else
-        return failure_messgage(p.errors.messages)
+        return failure_message(p.errors.messages)
       end
     else
-      return failure_messgage('Weekly anonymity count exceeded')
+      return failure_message('Weekly anonymity count exceeded')
     end
   end
 
   def self.update_post(params)
     post = Post.find(params[:id]) rescue nil
-    return failure_messgage('Post ID not found') if post.nil?
+    return failure_message('Post ID not found') if post.nil?
 
     post.body.push(params[:body])
     post.save
@@ -86,17 +86,17 @@ class Post < ActiveRecord::Base
 
   def self.delete_post(params)
     post = Post.find(params[:id]) rescue nil
-    return failure_messgage('Post ID not found') if post.nil?
+    return failure_message('Post ID not found') if post.nil?
     post.delete
   end
 
   private
 
-  def anonymity_check(user, anonymity_flag)
+  def self.anonymity_check(user, anonymity_flag)
     counter = user.anonymity_count
-    if anonymity_flag == false
+    if anonymity_flag == "false"
       return true
-    elsif anonymity_flag and counter < 2
+    elsif anonymity_flag == "true" and counter < 2
       user.anonymity_count = counter + 1
       user.save
       return true

@@ -21,8 +21,8 @@ ActiveRecord::Schema.define(:version => 20150529191522) do
     t.datetime "created_at",                      :null => false
     t.datetime "updated_at",                      :null => false
     t.boolean  "is_anonymous", :default => false
-    t.integer  "like"
-    t.integer  "dislike"
+    t.text     "like"
+    t.text     "dislike"
   end
 
   add_index "comments", ["post_id"], :name => "index_comments_on_post_id"
@@ -46,8 +46,8 @@ ActiveRecord::Schema.define(:version => 20150529191522) do
     t.datetime "created_at",                      :null => false
     t.datetime "updated_at",                      :null => false
     t.boolean  "is_anonymous", :default => false
-    t.integer  "like"
-    t.integer  "dislike"
+    t.text     "like"
+    t.text     "dislike"
   end
 
   add_index "posts", ["user_id"], :name => "index_posts_on_user_id"

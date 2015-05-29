@@ -14,7 +14,7 @@ class PostsController < ApplicationController
       response = Post.create_post(params, @user)
       render :json => {:message => response[:message]}, :status => response[:status] ? 200 : 400
     else
-      render :json => {:message => profanity_check[:message]}, status => 400
+      render :json => {:message => profanity_check[:message]}, :status => 400
     end
   end
 

@@ -21,6 +21,6 @@ class UsersController < ApplicationController
       return
     end
     user.update_profile(params)
-    render :json => {:message => 'Department Successfully Updated'}, :status => 200
+    render :json => {:message => 'User info successfully Updated'}, :status => 200
   end
 end

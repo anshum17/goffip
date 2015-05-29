@@ -1,9 +1,9 @@
 class Dictionary < ActiveRecord::Base
   attr_accessible :name
 
-  def self.check_profanity_words(params)
+  def self.check_profanity_words(body)
     profane_words = []
-    params[:body].split(' ').each do |word|
+    body.split(' ').each do |word|
       entry = Dictionary.where(:name => word).first
       profane_words.push(word) if entry.present?
     end
