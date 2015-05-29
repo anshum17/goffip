@@ -5,4 +5,20 @@ class PostController < ApplicationController
   #   render :json => response, status: 200
   # end
 
+
+  #####
+  # :params => {:body, :type}
+  #####
+  def create
+    Post.create_post(params)
+    render :json => {:message => 'Post Successfully Created'}, :status => 200
+  end
+
+  #####
+  # :params => {:body, :id}
+  #####
+  def update
+    result = Post.update_post(params)
+    render :json => {:message => result[:message]}, :status => result[:status] ? 200 : 400
+  end
 end
