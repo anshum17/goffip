@@ -2,7 +2,7 @@ class PostsController < ApplicationController
 
   def index
     response = Post.get_all_posts(params)
-    render :json => response, status: 200
+    render :json => {:payload => response}, status: 200
   end
 
   #####
@@ -32,11 +32,11 @@ class PostsController < ApplicationController
   end
 
   def get_post
-    response = Post.get_all_posts(params)
+    response = Post.get_post(params)
     if response['status'] == false
-      render :json => response, status: 400
+      render :json => {:payload => response}, status: 400
     else
-      render :json => response, status: 200
+      render :json => {:payload => response}, status: 200
     end
   end
 
