@@ -21,6 +21,7 @@ Goffip::Application.routes.draw do
   get '/user' => 'users#index'
   post '/user' => 'users#create'
   post '/user/update' => 'users#update'
+
   delete '/user' => 'users#delete'
 
   # The priority is based upon order of creation:
