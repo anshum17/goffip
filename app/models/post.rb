@@ -94,7 +94,7 @@ class Post < ActiveRecord::Base
 
   def anonymity_check(user, anonymity_flag)
     counter = user.anonymity_count
-    if !anonymity_flag
+    if anonymity_flag == false
       return true
     elsif anonymity_flag and counter < 2
       user.anonymity_count = counter + 1

@@ -21,8 +21,9 @@ class User < ActiveRecord::Base
     return "#{user.first_name} #{user.last_name}"
   end
 
-  def create_user(params)
-    user = User.new(params)
+  def self.create_user(params)
+    # Rails.logger.info(params)
+    user = User.new(:email => params[:email], :user_name => params[:user_name])
     user.session_token  = user.get_session_token()
     if user.save
       return {:message => 'User Successfully created', :status => true, :user => user}
@@ -57,16 +58,6 @@ class User < ActiveRecord::Base
      self.save
     end
     return self.session_token
-  end
-
-  private
-
-  def self.failure_message(message)
-
-  end
-
-  def self.success_message(message)
-
   end
 
 end
