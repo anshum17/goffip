@@ -1,0 +1,19 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  first_name: MyString
+  last_name: MyString
+  email: MyString
+  fb_link: MyString
+  department: 1
+  anonymity_count: 1
+  session_token: MyString
+
+two:
+  first_name: MyString
+  last_name: MyString
+  email: MyString
+  fb_link: MyString
+  department: 1
+  anonymity_count: 1
+  session_token: MyString
