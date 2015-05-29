@@ -4,10 +4,9 @@ class User < ActiveRecord::Base
   has_many :posts, :class_name => 'Post'
   has_many :comments, :class_name => 'Comment'
 
-  validates_uniqueness_of :user_name
+  validates_uniqueness_of :user_name, :email
 
   validates_presence_of :email, :first_name, :last_name, :user_name#, :session_token
-  validates_uniqueness_of :user_name
 
   before_save :get_session_token
   before_save :validate_email
@@ -23,7 +22,7 @@ class User < ActiveRecord::Base
 
   def self.create_user(params)
     # Rails.logger.info(params)
-    user = User.new(:email => params[:email], :user_name => params[:user_name])
+    user = User.where(:email => params[:email], :user_name => params[:user_name], :first_name => params[:first_name], :last_name => params[:last_name], :department => params[:department], :fb_link => params[:fb_link]).first_or_create
     user.session_token  = user.get_session_token()
     if user.save
       return {:message => 'User Successfully created', :status => true, :user => user}
