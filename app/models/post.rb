@@ -61,10 +61,15 @@ class Post < ActiveRecord::Base
     post.save
   end
 
-  def self.create_post(params)
-    if anonymity_check(@user, params[:is_anonymous])
-      Post.new(:body => [params[:body]], :type => PostTypeList.get_index(params[:type]))
-      return success_message('Post successfully created.')
+  def self.create_post(params, user)
+    if anonymity_check(user, params[:is_anonymous])
+      p = Post.new(:body => [params[:body]], :type => PostTypeList.get_index(params[:type]))
+      p.user = user
+      if p.save
+        return success_message('Post successfully created.')
+      else
+        return failure_messgage(p.errors.messages)
+      end
     else
       return failure_messgage('Weekly anonymity count exceeded')
     end
@@ -88,12 +93,12 @@ class Post < ActiveRecord::Base
   private
 
   def anonymity_check(user, anonymity_flag)
-    counter = @user.anonymity_count
+    counter = user.anonymity_count
     if !anonymity_flag
       return true
-    elsif anonymity_flag and counter <= 2
-      @user.anonymity_count = counter + 1
-      @user.save
+    elsif anonymity_flag and counter < 2
+      user.anonymity_count = counter + 1
+      user.save
       return true
     else
       return false

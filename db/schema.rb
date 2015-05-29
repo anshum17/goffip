@@ -11,17 +11,18 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20150529181924) do
+ActiveRecord::Schema.define(:version => 20150529191522) do
 
   create_table "comments", :force => true do |t|
     t.text     "body"
     t.integer  "user_id"
-    t.integer  "like",       :default => 0
     t.integer  "post_id"
     t.integer  "parent_id"
-    t.datetime "created_at",                :null => false
-    t.datetime "updated_at",                :null => false
-    t.integer  "dislike",    :default => 0
+    t.datetime "created_at",                      :null => false
+    t.datetime "updated_at",                      :null => false
+    t.boolean  "is_anonymous", :default => false
+    t.integer  "like"
+    t.integer  "dislike"
   end
 
   add_index "comments", ["post_id"], :name => "index_comments_on_post_id"
@@ -41,11 +42,12 @@ ActiveRecord::Schema.define(:version => 20150529181924) do
   create_table "posts", :force => true do |t|
     t.text     "body"
     t.integer  "user_id"
-    t.integer  "like",       :default => 0
     t.integer  "type"
-    t.datetime "created_at",                :null => false
-    t.datetime "updated_at",                :null => false
-    t.integer  "dislike",    :default => 0
+    t.datetime "created_at",                      :null => false
+    t.datetime "updated_at",                      :null => false
+    t.boolean  "is_anonymous", :default => false
+    t.integer  "like"
+    t.integer  "dislike"
   end
 
   add_index "posts", ["user_id"], :name => "index_posts_on_user_id"
