@@ -7,6 +7,7 @@ Goffip::Application.routes.draw do
 
   post '/comment' => 'comment#create'
   put '/comment' => 'comment#update'
+  get '/posts/get_posts' => 'posts#index'
 
   # The priority is based upon order of creation:
   # first created -> highest priority.

@@ -1,10 +1,9 @@
 class PostController < ApplicationController
 
-  # def get_posts
-  #   response = Post.get_all_posts
-  #   render :json => response, status: 200
-  # end
-
+  def index
+    response = Post.get_all_posts params[:user_id]
+    render :json => response, status: 200
+  end
 
   #####
   # :params => {:body, :type}
@@ -31,4 +30,5 @@ class PostController < ApplicationController
       render :json => {:message => profanity_check[:message]}, status => 400
     end
   end
+
 end

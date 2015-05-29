@@ -26,4 +26,5 @@ class CommentController < ApplicationController
       render :json => {:message => profanity_check[:message]}, status => 400
     end
   end
+
 end
