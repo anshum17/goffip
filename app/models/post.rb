@@ -28,7 +28,7 @@ class Post < ActiveRecord::Base
       'id' => self.id,
       'body' => self.body.last,
       'user_name' => self.is_anonymous ? 'Anonymous' : user.user_name,
-      'post_type' => self.post_type,
+      'post_type' => PostTypeList.get_name(self.post_type),
       'like' => self.like.present? ? self.like.count : 0,
       'comments' => Comment.get_comments(self,user),
       'created_at' => self.created_at.to_i
