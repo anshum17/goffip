@@ -64,8 +64,8 @@ class Comment < ActiveRecord::Base
     like_status = params[:like] # true or false
     comment = Comment.find(params[:comment_id])
     return if user.blank? || comment.blank?
-    users_liked_comment = comment.like.split(',')
-    users_disliked_comment = comment.dislike.split(',')
+    users_liked_comment = comment.like.to_s.split(',')
+    users_disliked_comment = comment.dislike.to_s.split(',')
     if users_liked_comment.include? user.id.to_s
       return failure_message('Can not like a comment twice.') if like_status == "true"
       comment.dislike = users_disliked_comment.push(user.id.to_s).join(',')

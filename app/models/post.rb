@@ -47,8 +47,8 @@ class Post < ActiveRecord::Base
     like_status = params[:like] # true or false
     post = Post.find(params[:post_id])
     return if user.blank? || post.blank?
-    users_liked_post = post.like.split(',')
-    users_disliked_post = post.dislike.split(',')
+    users_liked_post = post.like.to_s.split(',')
+    users_disliked_post = post.dislike.to_s.split(',')
     if users_liked_post.include? user.id.to_s
       return failure_message('Can not like a post twice.') if like_status == "true"
       post.dislike = users_disliked_post.push(user.id.to_s).join(',')
