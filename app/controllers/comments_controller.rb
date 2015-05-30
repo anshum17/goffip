@@ -33,7 +33,7 @@ class CommentsController < ApplicationController
   end
 
   def like_comment
-    response = Comment.process_like(params)
+    response = Comment.process_like(params, @user)
     if response['status'] == false
       render :json => response, status: 400
     else

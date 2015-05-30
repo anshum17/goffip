@@ -42,23 +42,35 @@ class Post < ActiveRecord::Base
     post.get_post_hash(user)
   end
 
-  def self.process_like(params)
-    @user = User.get_name_by_id params[:user_id]
-    like_status = params[:like]
+  def self.process_like(params, user)
+    # @user = User.get_name_by_id params[:user_id]
+    like_status = params[:like] # true or false
     post = Post.find(params[:post_id])
-    return if @user.blank? || post.blank?
-    users_liked_post = post.like
-    users_disliked_post = post.dislike
-    if users_liked_post.include? @user
-      return failure_message('Can not like a post twice.') if like_status == true
-      post.like.push(@user_id)
-    elsif users_disliked_post.include? @user
-      return failure_message('Can not dislike a post twice.') if like_status == false
-      post.dislike.push(@user_id)
+    return if user.blank? || post.blank?
+    users_liked_post = post.like.split(',')
+    users_disliked_post = post.dislike.split(',')
+    if users_liked_post.include? user.id.to_s
+      return failure_message('Can not like a post twice.') if like_status == "true"
+      post.dislike = users_disliked_post.push(user.id.to_s).join(',')
+      users_liked_post -= [user.id.to_s]
+      post.like = users_liked_post.join(',')
+    elsif users_disliked_post.include? user.id.to_s
+      return failure_message('Can not dislike a post twice.') if like_status == "false"
+      post.like = users_liked_post.push(user.id.to_s).join(',')
+      users_disliked_post -= [user.id.to_s]
+      post.dislike = users_disliked_post.join(',')
     else
-      like_status ? post.like.push(@user_id) : post.dislike.push(@user_id)
+      # like_status ? post.like.push(user.id) : post.dislike.push(user.id)
+      if like_status == "true"
+        users_liked_post += [user.id.to_s]
+        post.like = users_liked_post.join(',')
+      else
+        users_disliked_post += [user.id.to_s]
+        post.dislike = users_disliked_post.join(',')
+      end
     end
     post.save
+    success_message('Successfully updated')
   end
 
   def self.create_post(params, user)

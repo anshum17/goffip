@@ -46,7 +46,7 @@ class PostsController < ApplicationController
   end
 
   def like_post
-    response = Post.process_like(params)
+    response = Post.process_like(params, @user)
     if response['status'] == false
       render :json => response, status: 400
     else

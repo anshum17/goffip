@@ -7,12 +7,12 @@ class Comment < ActiveRecord::Base
   belongs_to :parent_comment, :class_name => 'Comment', :foreign_key => :parent_id
 
   serialize :body, Array
-  serialize :like, Array
-  serialize :dislike, Array
+  # serialize :like, Array
+  # serialize :dislike, Array
   validates_presence_of :body, :user, :post
 
   def self.create_comment(params, user)
-    c = Comment.new(:body => [params[:body]], :parent_id => params[:parent_id], :is_anonymous => params[:is_anonymous])
+    c = Comment.new(:like => '', :dislike => '',:body => [params[:body]], :parent_id => params[:parent_id], :is_anonymous => params[:is_anonymous])
     c.post = Post.find(params[:post_id])
     c.user = user
     if c.save
@@ -61,21 +61,33 @@ class Comment < ActiveRecord::Base
   end
 
   def self.process_like(params, user)
-    like_status = params[:like]
-    comment = Post.find(params[:comment_id])
+    like_status = params[:like] # true or false
+    comment = Comment.find(params[:comment_id])
     return if user.blank? || comment.blank?
-    users_liked_comment = comment.like
-    users_disliked_comment = comment.dislike
-    if users_liked_comment.include? user
-      return failure_response('Can not like a comment twice.') if like_status == true
-      comment.like.push(user.id)
-    elsif users_disliked_comment.include? user
-      return failure_response('Can not dislike a comment twice.') if like_status == false
-      comment.dislike.push(user.id)
+    users_liked_comment = comment.like.split(',')
+    users_disliked_comment = comment.dislike.split(',')
+    if users_liked_comment.include? user.id.to_s
+      return failure_message('Can not like a comment twice.') if like_status == "true"
+      comment.dislike = users_disliked_comment.push(user.id.to_s).join(',')
+      users_liked_comment -= [user.id.to_s]
+      comment.like = users_liked_comment.join(',')
+    elsif users_disliked_comment.include? user.id.to_s
+      return failure_message('Can not dislike a comment twice.') if like_status == "false"
+      comment.like = users_liked_comment.push(user.id.to_s).join(',')
+      users_disliked_comment -= [user.id.to_s]
+      comment.dislike = users_disliked_comment.join(',')
     else
-      like_status ? comment.like.push(user.id) : comment.dislike.push(user.id)
+      # like_status ? comment.like.push(user.id) : comment.dislike.push(user.id)
+      if like_status == "true"
+        users_liked_comment += [user.id.to_s]
+        comment.like = users_liked_comment.join(',')
+      else
+        users_disliked_comment += [user.id.to_s]
+        comment.dislike = users_disliked_comment.join(',')
+      end
     end
     comment.save
+    success_message('Successfully updated')
   end
 
   def self.delete_post(params)
