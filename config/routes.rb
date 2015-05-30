@@ -22,6 +22,8 @@ Goffip::Application.routes.draw do
   post '/user' => 'users#create'
   put '/user' => 'users#update'
 
+  get '/search' => 'users#search'
+
   # The priority is based upon order of creation:
   # first created -> highest priority.
 

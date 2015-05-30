@@ -32,6 +32,10 @@ gem 'pry'
 
 gem 'whenever', :require => false
 
+# gem 'texticle', :require => 'texticle/rails'
+
+gem 'pg_search'
+
 # To use ActiveModel has_secure_password
 # gem 'bcrypt-ruby', '~> 3.0.0'
 

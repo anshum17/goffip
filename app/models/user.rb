@@ -12,6 +12,10 @@ class User < ActiveRecord::Base
   before_save :get_session_token
   before_save :validate_email
 
+  include PgSearch
+  pg_search_scope :search, against: [:first_name, :last_name],
+    using: {tsearch: {dictionary: "english", prefix: true, any_word: true}}
+
   def self.get_name_by_id(user_id)
     user = User.find(user_id) rescue nil
   end
@@ -61,6 +65,31 @@ class User < ActiveRecord::Base
 
   def reset_anonymity_count
     User.update_all(:anonymity_count => 0)
+  end
+
+  def self.app_search(query)
+    results = text_search(query)
+    results.collect do |user|
+      user.to_hash
+    end
+  end
+
+  def self.text_search(query)
+    if query.present?
+      search(query)
+    end
+  end
+
+  def to_hash
+    {
+      'id' => self.id,
+      'first_name' => self.first_name.present? ? self.first_name : '',
+      'last_name' => self.last_name.present? ? self.last_name : '',
+      'department' => self.department.present? ? self.department : '',
+      'email' => self.email.present? ? self.email : '',
+      'fb_link' => self.fb_link.present? ? self.fb_link : '',
+      'user_name' => self.user_name.present? ? self.user_name : ''
+    }
   end
 
   private

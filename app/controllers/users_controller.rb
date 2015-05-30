@@ -19,4 +19,10 @@ class UsersController < ApplicationController
     user.update_profile(params)
     render :json => {:message => 'Department Successfully Updated'}, :status => 200
   end
+
+  def search
+    result = User.app_search(params[:query])
+    render :json => {:payload => result}, :status => 200
+  end
+
 end
