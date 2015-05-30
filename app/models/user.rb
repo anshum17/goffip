@@ -59,6 +59,10 @@ class User < ActiveRecord::Base
     return self.session_token
   end
 
+  def reset_anonymity_count
+    User.update_all(:anonymity_count => 0)
+  end
+
   private
 
   def self.failure_message(message)
