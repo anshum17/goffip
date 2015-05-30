@@ -4,7 +4,8 @@ class User < ActiveRecord::Base
   has_many :posts, :class_name => 'Post'
   has_many :comments, :class_name => 'Comment'
 
-  validates_uniqueness_of :user_name, :email
+  validates_uniqueness_of :user_name, :allow_blank => true
+  validates_uniqueness_of :email
 
   validates_presence_of :email, :first_name, :last_name#, :session_token
 
@@ -44,11 +45,17 @@ class User < ActiveRecord::Base
   end
 
   def update_profile(params)
-    self.update_attributes(:user_name => params[:user_name], :department => DepartmentList.get_index(params[:department]))
+    result = self.update_attributes(:user_name => params[:user_name], :department => DepartmentList.get_index(params[:department]))
+    if result == true
+      {:status => true, :message => 'Successfully Updated'}
+    else
+      {:status => false, :message => self.errors.messages}
+    end
   end
 
   def validate_email
-
+    company_email = self.email.split('@')[1]
+    return ['tinyowl.com','tinyowl.co.in'].include? company_email
   end
 
   def get_session_token

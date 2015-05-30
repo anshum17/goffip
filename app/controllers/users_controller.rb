@@ -20,7 +20,7 @@ class UsersController < ApplicationController
       render :json => {:message => 'User not found'}, :status => 400
       return
     end
-    user.update_profile(params)
-    render :json => {:message => 'User info successfully Updated'}, :status => 200
+    response = user.update_profile(params)
+    render :json => {:message => response[:message]}, :status => response[:status] ? 200 : 400
   end
 end
