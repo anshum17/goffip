@@ -1,8 +1,8 @@
 class PostsController < ApplicationController
 
   def index
-    response = Post.get_all_posts(params)
-    render :json => response, status: 200
+    response = Post.get_all_posts(params,@user)
+    render :json => {:payload => response}, status: 200
   end
 
   #####
@@ -14,7 +14,7 @@ class PostsController < ApplicationController
       response = Post.create_post(params, @user)
       render :json => {:message => response[:message]}, :status => response[:status] ? 200 : 400
     else
-      render :json => {:message => profanity_check[:message]}, status => 400
+      render :json => {:message => profanity_check[:message]}, :status => 400
     end
   end
 
@@ -33,15 +33,15 @@ class PostsController < ApplicationController
 
   def delete
     Post.delete_post(params)
-    render :nothing => true, :status => 200
+    render :json => {:message => 'Post successfully deleted'}, :status => 200
   end
 
   def get_post
-    response = Post.get_all_posts(params)
+    response = Post.get_post(params[:id], @user)
     if response['status'] == false
-      render :json => response, status: 400
+      render :json => {:payload => response}, status: 400
     else
-      render :json => response, status: 200
+      render :json => {:payload => response}, status: 200
     end
   end
 
@@ -52,10 +52,6 @@ class PostsController < ApplicationController
     else
       render :json => response, status: 200
     end
-  end
-
-  def testing
-    render :json => {:message => 'yay'}
   end
 
 end

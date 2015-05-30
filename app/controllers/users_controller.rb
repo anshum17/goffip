@@ -15,9 +15,13 @@ class UsersController < ApplicationController
 
   ##update user info
   def update
-    user = User.find(@user.id)
-    user.update_profile(params)
-    render :json => {:message => 'Department Successfully Updated'}, :status => 200
+    user = User.find(@user.id) rescue nil
+    if user.nil?
+      render :json => {:message => 'User not found'}, :status => 400
+      return
+    end
+    response = user.update_profile(params)
+    render :json => {:message => response[:message]}, :status => response[:status] ? 200 : 400
   end
 
   def search

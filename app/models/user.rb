@@ -4,10 +4,10 @@ class User < ActiveRecord::Base
   has_many :posts, :class_name => 'Post'
   has_many :comments, :class_name => 'Comment'
 
-  validates_uniqueness_of :user_name
+  validates_uniqueness_of :user_name, :allow_blank => true
+  validates_uniqueness_of :email
 
-  validates_presence_of :email, :first_name, :last_name, :user_name#, :session_token
-  validates_uniqueness_of :user_name
+  validates_presence_of :email, :first_name, :last_name#, :session_token
 
   before_save :get_session_token
   before_save :validate_email
@@ -25,13 +25,14 @@ class User < ActiveRecord::Base
     return "#{user.first_name} #{user.last_name}"
   end
 
-  def create_user(params)
-    user = User.new(params)
+  def self.create_user(params)
+    # Rails.logger.info(params)
+    user = User.where(:email => params[:email], :first_name => params[:first_name], :last_name => params[:last_name], :department => params[:department], :fb_link => params[:fb_link]).first_or_create
     user.session_token  = user.get_session_token()
     if user.save
       return {:message => 'User Successfully created', :status => true, :user => user}
     else
-      return {:message => user.errors.messages, :status => false, :user => nil}
+      return {:message => user.errors.messages, :status => false, :user => ''}
     end
   end
 
@@ -48,11 +49,17 @@ class User < ActiveRecord::Base
   end
 
   def update_profile(params)
-    self.update_attributes(:department => DepartmentList.get_index(params[:department]))
+    result = self.update_attributes(:user_name => params[:user_name], :department => DepartmentList.get_index(params[:department]))
+    if result == true
+      {:status => true, :message => 'Successfully Updated'}
+    else
+      {:status => false, :message => self.errors.messages}
+    end
   end
 
   def validate_email
-
+    company_email = self.email.split('@')[1]
+    return ['tinyowl.com','tinyowl.co.in'].include? company_email
   end
 
   def get_session_token
@@ -90,16 +97,6 @@ class User < ActiveRecord::Base
       'fb_link' => self.fb_link.present? ? self.fb_link : '',
       'user_name' => self.user_name.present? ? self.user_name : ''
     }
-  end
-
-  private
-
-  def self.failure_message(message)
-
-  end
-
-  def self.success_message(message)
-
   end
 
 end

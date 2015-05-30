@@ -1,13 +1,5 @@
 class CommentsController < ApplicationController
 
-  def like_comment
-    response = Comment.process_like(params)
-    if response['status'] == false
-      render :json => response, status: 400
-    else
-      render :json => response, status: 200
-    end
-  end
 
   #####
   # :params => {:body, :post_id}
@@ -15,7 +7,7 @@ class CommentsController < ApplicationController
   def create
     profanity_check = Dictionary.check_profanity_words(params[:body])
     if profanity_check[:status]
-      response = Post.create_post(params, @user)
+      response = Comment.create_comment(params, @user)
       render :json => {:message => response[:message]}, :status => response[:status] ? 200 : 400
     else
       render :json => {:message => profanity_check[:message]}, status => 400
@@ -28,7 +20,7 @@ class CommentsController < ApplicationController
   def update
     profanity_check = Dictionary.check_profanity_words(params[:body])
     if profanity_check[:status]
-      result = Post.update_post(params)
+      result = Comment.update_comment(params)
       render :json => {:message => result[:message]}, :status => result[:status] ? 200 : 400
     else
       render :json => {:message => profanity_check[:message]}, status => 400
@@ -37,7 +29,16 @@ class CommentsController < ApplicationController
 
   def delete
     Comment.delete_comment(params)
-    render :nothing => true, :status => 200
+    render :json => {:message => 'Successfully Deleted Comment'}, :status => 200
+  end
+
+  def like_comment
+    response = Comment.process_like(params)
+    if response['status'] == false
+      render :json => response, status: 400
+    else
+      render :json => response, status: 200
+    end
   end
 
 end
